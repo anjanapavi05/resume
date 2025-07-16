@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dr. Anjana Pavithran - Dentist Profile</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1a202c; /* Dark background (gray-900) */
+            color: #e2e8f0; /* Light text color for body (gray-200) */
+        }
+        .section-title {
+            /* Changed text color and border color for dark theme */
+            @apply mb-6 pb-3 border-b-2 border-purple-400 w-full text-purple-400;
+        }
+        .card {
+            /* Darker background for cards, lighter border and text */
+            @apply bg-gray-800 p-8 shadow-lg border border-gray-700 hover:shadow-xl transition-shadow duration-300;
+            border-radius: 2.5rem; /* Custom larger border-radius for a very soft, rounded rectangle */
+            position: relative; /* Needed for pseudo-elements */
+            z-index: 1; /* Ensure content is above pseudo-element */
+            color: #e2e8f0; /* Light text for card content */
+        }
+
+        /* Gradient border effect for general cards (now including About Me and Education) */
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 8px; /* Width of the gradient bar */
+            height: 100%;
+            background: linear-gradient(to bottom, #8b5cf6, #d946ef); /* Brighter gradient for dark theme */
+            border-top-left-radius: inherit; /* Match parent's border-radius */
+            border-bottom-left-radius: inherit; /* Match parent's border-radius */
+            z-index: 0; /* Behind content */
+            opacity: 1; /* Always visible */
+            transition: none; /* No transition for this permanent bar */
+            padding: 0; /* No padding for this bar */
+            -webkit-mask: none; /* No mask for this bar */
+            mask-composite: unset; /* No mask for this bar */
+        }
+
+        /* Animation styles for scroll-reveal */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            will-change: opacity, transform;
+        }
+
+        .animate-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Back to top button styles */
+        #backToTopBtn {
+            display: none; /* Hidden by default */
+            position: fixed; /* Fixed position */
+            bottom: 20px; /* Place at the bottom */
+            right: 20px; /* Place at the right */
+            z-index: 99; /* Ensure it's above other content */
+            background-color: #8b5cf6; /* Brighter purple for dark theme */
+            color: white; /* White text */
+            border: none; /* No border */
+            border-radius: 50%; /* Circular shape */
+            width: 50px; /* Width */
+            height: 50px; /* Height */
+            font-size: 24px; /* Icon size */
+            cursor: pointer; /* Pointer on hover */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        #backToTopBtn:hover {
+            background-color: #7c3aed; /* Darker purple on hover */
+            transform: translateY(-2px); /* Slight lift effect */
+        }
+
+        /* Styles for the main hero header */
+        .hero-header {
+            /* Darker gradient for dark theme */
+            @apply bg-gradient-to-r from-gray-900 to-gray-700 text-white rounded-3xl shadow-xl pb-12 mb-32;
+            min-height: 400px;
+            padding-top: 4rem; /* pt-16 equivalent */
+            padding-left: 1rem; /* Reduced from 2rem (px-8) to 1rem (px-4) */
+            padding-right: 1rem; /* Reduced from 2rem (px-8) to 1rem (px-4) */
+        }
+
+        /* Styles for the navigation within the hero header */
+        .hero-nav {
+            @apply flex justify-between items-center w-full py-4; /* Keep py for vertical spacing */
+        }
+        .hero-nav .logo {
+            @apply text-2xl font-bold text-white;
+        }
+        .hero-nav .nav-links a {
+            /* Tab-like styling - Adjusted for dark theme */
+            @apply bg-gray-700 text-gray-200 px-6 py-2 rounded-t-lg shadow-md transition-colors duration-200 ml-4;
+            border-bottom: none; /* Remove bottom border if any */
+            border-top: 2px solid transparent;
+            border-left: 1px solid #4a5568; /* Darker gray border */
+            border-right: 1px solid #4a5568; /* Darker gray border */
+            position: relative;
+            z-index: 10; /* Ensure tabs are above the header gradient */
+        }
+        .hero-nav .nav-links a:hover {
+            @apply bg-gray-600 text-purple-300; /* Lighter background and purple text on hover */
+            border-top-color: #a78bfa; /* Highlight top border on hover */
+        }
+        .hero-nav .nav-links a.active {
+            @apply bg-gray-600 text-purple-300 font-semibold; /* Active tab styling */
+            border-top-color: #8b5cf6; /* Stronger highlight for active tab */
+            border-bottom-color: transparent; /* Ensure no bottom border for active tab */
+        }
+
+
+        /* Styles for individual skill links (tags) - Now acting as fancy small buttons */
+        .skill-link {
+            /* Adjusted for dark theme */
+            @apply bg-gray-700 text-gray-200 px-6 py-3 shadow-md border border-gray-600 cursor-pointer;
+            border-radius: 2rem; /* Soft rounded corners */
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            display: inline-flex; /* Use flexbox to align content and color box */
+            align-items: center; /* Vertically center content */
+            transition: all 0.3s ease; /* Smooth transition for hover effects */
+            padding-left: 1.5rem; /* Adjust padding to make space for the color box */
+        }
+
+        /* Style for the new color box inside skill links */
+        .skill-color-box {
+            @apply w-3 h-3 rounded-full mr-3; /* Small circle, margin-right for spacing */
+            background-color: #8b5cf6; /* Default color, can be customized per link if needed */
+            flex-shrink: 0; /* Prevent the box from shrinking */
+        }
+
+        /* Hover effects for skill links to make them feel more like buttons */
+        .skill-link:hover {
+            transform: translateY(-3px); /* Slight lift */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4); /* More pronounced shadow */
+        }
+
+        /* Full gradient border for individual skill links, always visible */
+        .skill-link::after {
+            content: '';
+            position: absolute;
+            top: -6px; /* Position outside the content box */
+            left: -6px; /* Position outside the content box */
+            right: -6px; /* Position outside the content box */
+            bottom: -6px; /* Position outside the content box */
+            border-radius: inherit; /* Inherit border-radius from parent */
+            background: linear-gradient(45deg, #8b5cf6, #d946ef); /* Brighter gradient for dark theme */
+            opacity: 1; /* Always visible */
+            transition: none; /* No transition for permanent visibility */
+            /* Use a mask to create the border effect *around* the element */
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            z-index: -1; /* Behind content */
+        }
+
+        /* Styles for the individual skill category cards */
+        .skill-category-card {
+            /* Adjusted for dark theme */
+            @apply bg-gray-800 p-10 shadow-lg border border-gray-700 hover:shadow-xl transition-shadow duration-300;
+            border-radius: 2.5rem; /* Custom larger border-radius for a very soft, rounded rectangle */
+            position: relative;
+            z-index: 1;
+            color: #e2e8f0; /* Light text for card content */
+        }
+        /* Permanent left gradient bar for skill category cards */
+        .skill-category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 8px; /* Width of the gradient bar */
+            height: 100%;
+            background: linear-gradient(to bottom, #8b5cf6, #d946ef); /* Brighter gradient for dark theme */
+            border-top-left-radius: inherit; /* Match parent's border-radius */
+            border-bottom-left-radius: inherit; /* Match parent's border-radius */
+            z-index: 0; /* Behind content */
+            opacity: 1; /* Always visible */
+            transition: none; /* No transition for this permanent bar */
+            padding: 0; /* No padding for this bar */
+            -webkit-mask: none; /* No mask for this bar */
+            mask-composite: unset; /* No mask for this bar */
+        }
+
+        .skill-category-card h4 {
+            @apply text-purple-400; /* Lighter purple for subheadings */
+        }
+
+
+        /* Modal styles - Adjusted for dark theme */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8); /* Darker overlay */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: #2d3748; /* Darker background for modal */
+            padding: 2rem;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.4);
+            max-width: 600px;
+            width: 90%;
+            color: #e2e8f0; /* Light text for modal */
+            position: relative;
+            transform: translateY(-20px);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .modal-overlay.show .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .modal-close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #e2e8f0; /* Light color for close button */
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .modal-close-btn:hover {
+            color: #8b5cf6; /* Brighter purple hover */
+        }
+
+        /* AI Assistant Chat - Adjusted for dark theme */
+        #chat-messages {
+            @apply bg-gray-700 p-4 rounded-xl h-48 overflow-y-auto shadow-inner border border-gray-600;
+        }
+        #chat-messages div {
+            color: #e2e8f0; /* Light text for chat messages */
+        }
+        #chat-messages .bg-blue-100 { /* User message */
+            background-color: #4a5568; /* Darker blue for user messages */
+        }
+        #chat-messages .bg-gray-200 { /* AI message */
+            background-color: #2d3748; /* Darker gray for AI messages */
+        }
+        #chat-input {
+            @apply bg-gray-700 text-gray-200 p-3 border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500;
+        }
+        #send-button {
+            @apply bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-xl shadow-md transition-colors duration-300;
+        }
+
+        /* Contact Form - Adjusted for dark theme */
+        form input, form textarea {
+            @apply bg-gray-700 text-gray-200 border-gray-600 focus:ring-purple-500;
+        }
+        form label {
+            @apply text-gray-200;
+        }
+
+        /* Footer - Adjusted for dark theme */
+        footer {
+            @apply bg-gray-800 text-gray-300 rounded-3xl shadow-lg;
+        }
+        footer a {
+            @apply text-purple-400 hover:text-purple-300;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-4xl">
+
+        <!-- Main Hero Header Section -->
+        <header class="hero-header animate-on-scroll">
+            <!-- Navigation within the hero header -->
+            <nav class="hero-nav">
+                <div class="logo">Dr. ANJANA PAVITHRAN</div>
+                <div class="nav-links">
+                    <a href="#about-me-section">About Me</a>
+                    <a href="#education-section">Education</a>
+                    <a href="#skills-section">Skills</a>
+                    <a href="#ai-assistant-section">AI Assistant</a>
+                    <a href="#contact-section">Contact</a>
+                </div>
+            </nav>
+
+            <!-- Wrapper for main header content to allow individual centering -->
+            <div class="flex flex-col items-center text-center px-8 pt-12">
+                <h1 class="text-5xl md:text-6xl font-extrabold mb-3">Hi, I am Anjana</h1>
+                <p class="text-2xl md:text-3xl mb-4">General Dentist | Oral Health Specialist</p>
+                <p class="text-lg md:text-xl max-w-2xl mx-auto mb-8">
+                    As a dedicated General Dentist and Oral Health Specialist, I provide comprehensive dental care focused on prevention, diagnosis, and treatment of a wide range of oral conditions. My expertise ensures optimal oral health and beautiful smiles for diverse patient populations, utilizing modern techniques and a patient-centered approach.
+                </p>
+                
+                <!-- Call to action buttons (optional, similar to image) -->
+                <div class="flex flex-wrap justify-center gap-4">
+                    <a href="#about-me-section" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition-colors duration-300">
+                        Learn More About Me
+                    </a>
+                    <button class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition-colors duration-300">
+                        Talk To My AI Assistant
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- About Me Heading (outside the card) -->
+        <h2 id="about-me-heading" class="section-title text-3xl md:text-4xl font-bold text-center animate-on-scroll mt-10">About Me</h2>
+
+        <!-- About Me Section -->
+        <section id="about-me-section" class="mb-12 mt-10 card animate-on-scroll relative overflow-hidden
+                       shadow-xl hover:scale-[1.01] transition-transform duration-300">
+            <!-- Profile Content -->
+            <p class="text-lg leading-relaxed relative z-10 text-justify max-w-2xl mx-auto my-4">
+                A General Dentist with 2 years of experience providing comprehensive oral care to diverse patient populations.
+                Proficient in performing routine dental procedures, diagnosing and treating various dental conditions, and utilizing advanced dental technologies.
+                Adept at fostering long-term patient relationships, delivering patient-centered care, and collaborating with multidisciplinary teams to enhance overall oral health.
+                Committed to maintaining up-to-date knowledge in the field and providing exceptional dental services.
+            </p>
+        </section>
+
+        <!-- Education Heading (outside the card) -->
+        <h2 id="education-heading" class="section-title text-3xl md:text-4xl font-bold text-center animate-on-scroll mt-10">Education</h2>
+
+        <!-- Education Section (the card itself) -->
+        <section id="education-section" class="mb-12 card animate-on-scroll">
+            <div class="mb-6 mt-4 text-center max-w-2xl mx-auto">
+                <h3 class="text-xl font-semibold text-purple-400">Bachelor of Dental Surgery (BDS)</h3>
+                <p class="text-purple-300">KERALA UNIVERSITY OF HEALTH SCIENCES | Sep 2017 to Nov 2023</p>
+            </div>
+        </section>
+
+        <!-- Skills Heading (outside the card) -->
+        <h2 id="skills-heading" class="section-title text-3xl md:text-4xl font-bold text-center animate-on-scroll mt-10">Skills</h2>
+
+        <!-- Skills Section (container for individual skill cards) -->
+        <section id="skills-section" class="mb-12 animate-on-scroll">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-lg mt-4">
+                
+                <!-- Core Dental Skills Card -->
+                <div class="skill-category-card">
+                    <h4 class="font-semibold mb-4 text-center">Core Dental Skills:</h4>
+                    <div class="flex flex-wrap gap-6 justify-center">
+                        <a href="#" class="skill-link" data-skill="Diagnosis and treatment planning">
+                            <div class="skill-color-box bg-purple-400"></div> Diagnosis and treatment planning
+                        </a>
+                        <a href="#" class="skill-link" data-skill="Digital radiography">
+                            <div class="skill-color-box bg-purple-400"></div> Digital radiography
+                        </a>
+                        <a href="#" class="skill-link" data-skill="Direct restoration">
+                            <div class="skill-color-box bg-purple-400"></div> Direct restoration
+                        </a>
+                        <a href="#" class="skill-link" data-skill="Indirect restoration">
+                            <div class="skill-color-box bg-purple-400"></div> Indirect restoration
+                        </a>
+                        <a href="#" class="skill-link" data-skill="Complete and partial denture">
+                            <div class="skill-color-box bg-purple-400"></div> Complete and partial denture
+                        </a>
+                        <a href="#" class="skill-link" data-skill="Oral prophylaxis">
+                            <div class="skill-color-box bg-purple-400"></div> Oral prophylaxis
+                        </a>
+                        <a href="#" class="skill-link" data-skill="Tooth extraction">
+                            <div class="skill-color-box bg-purple-400"></div> Tooth extraction
+                        </a>
+                        <a href="#" class="skill-link" data-skill="Root canal procedures">
+                            <div class="skill-color-box bg-purple-400"></div> Root canal procedures
+                        </a>
+                        <a href="#" class="skill-link" data-skill="Dental implant assistance">
+                            <div class="skill-color-box bg-purple-400"></div> Dental implant assistance
+                        </a>
+                        <a href="#" class="skill-link" data-skill="Crown and bridge preparation">
+                            <div class="skill-color-box bg-purple-400"></div> Crown and bridge preparation
+                        </a>
+                        <a href="#" class="skill-link" data-skill="Periodontal surgeries">
+                            <div class="skill-color-box bg-purple-400"></div> Periodontal surgeries
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Patient Management Card -->
+                <div class="skill-category-card">
+                    <h4 class="font-semibold mb-4 text-center">Patient Management:</h4>
+                    <div class="flex flex-wrap gap-6 justify-center">
+                        <a href="#" class="skill-link" data-skill="Patient education care and management">
+                            <div class="skill-color-box bg-purple-400"></div> Patient education care and management
+                        </a>
+                        <a href="#" class="skill-link" data-skill="Fostering long-term patient relationships">
+                            <div class="skill-color-box bg-purple-400"></div> Fostering long-term patient relationships
+                        </a>
+                    </div>
+                </div>
+
+                <!-- General Skills Card -->
+                <div class="skill-category-card">
+                    <h4 class="font-semibold mb-4 text-center">General Skills:</h4>
+                    <div class="flex flex-wrap gap-6 justify-center">
+                        <a href="#" class="skill-link" data-skill="Research and publication">
+                            <div class="skill-color-box bg-purple-400"></div> Research and publication
+                        </a>
+                        <a href="#" class="skill-link" data-skill="Detail oriented and dexterity">
+                            <div class="skill-color-box bg-purple-400"></div> Detail oriented and dexterity
+                        </a>
+                        <a href="#" class="skill-link" data-skill="Strong communication skills">
+                            <div class="skill-color-box bg-purple-400"></div> Strong communication skills
+                        </a>
+                        <a href="#" class="skill-link" data-skill="Multi-lingual">
+                            <div class="skill-color-box bg-purple-400"></div> Multi-lingual
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- AI Assistant Section -->
+        <h2 id="ai-assistant-heading" class="section-title text-3xl md:text-4xl font-bold text-center animate-on-scroll mt-10 mb-8">Talk to My AI Assistant</h2>
+
+        <section id="ai-assistant-section" class="mb-12 card animate-on-scroll">
+            <p class="text-lg leading-relaxed text-center max-w-2xl mx-auto mb-6">
+                Have questions about my experience, skills, or projects? Ask my AI assistant anything!
+            </p>
+
+            <div class="flex flex-col gap-4 max-w-xl mx-auto">
+                <!-- Chat Message Display Area -->
+                <div id="chat-messages">
+                    <!-- Initial AI Message -->
+                    <div class="bg-gray-700 p-3 rounded-lg max-w-[80%] self-start mb-2">
+                        Hello! I'm Dr. P's AI assistant. How can I help you learn more about Dr. P's profile?
+                    </div>
+                </div>
+
+                <!-- Chat Input and Send Button -->
+                <div class="flex gap-2">
+                    <input type="text" id="chat-input" placeholder="Ask me anything about Dr. P...">
+                    <button id="send-button">
+                        Send
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- New Get In Touch Section -->
+        <h2 id="contact-section" class="section-title text-3xl md:text-4xl font-bold text-center animate-on-scroll mt-10 mb-8">Get In Touch</h2>
+
+        <section class="mb-12 card animate-on-scroll">
+            <p class="text-lg leading-relaxed text-center max-w-2xl mx-auto mb-6">
+                I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision. Feel free to reach out!
+            </p>
+
+            <div class="flex flex-wrap justify-center gap-6 mb-8">
+                <a href="mailto:anjanapavi05@gmail.com" class="flex items-center bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition-colors duration-300">
+                    <i class="fas fa-envelope mr-2"></i> Send Email
+                </a>
+                <a href="https://linkedin.com/in/yourprofile" target="_blank" class="flex items-center bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition-colors duration-300">
+                    <i class="fab fa-linkedin mr-2"></i> Connect on LinkedIn
+                </a>
+            </div>
+
+            <div class="bg-gray-800 p-8 rounded-3xl shadow-lg border border-gray-700 max-w-md mx-auto">
+                <h3 class="text-2xl font-bold text-purple-400 mb-6 text-center">Send a Message</h3>
+                <form>
+                    <div class="mb-4">
+                        <label for="name" class="block text-gray-200 text-sm font-bold mb-2">Name:</label>
+                        <input type="text" id="name" name="name" placeholder="Your Name"
+                               class="shadow appearance-none border rounded-xl w-full py-3 px-4 leading-tight focus:outline-none focus:shadow-outline focus:ring-2">
+                    </div>
+                    <div class="mb-4">
+                        <label for="email" class="block text-gray-200 text-sm font-bold mb-2">Email:</label>
+                        <input type="email" id="email" name="email" placeholder="Enter your email"
+                               class="shadow appearance-none border rounded-xl w-full py-3 px-4 leading-tight focus:outline-none focus:shadow-outline focus:ring-2">
+                    </div>
+                    <div class="mb-6">
+                        <label for="message" class="block text-gray-200 text-sm font-bold mb-2">Message:</label>
+                        <textarea id="message" name="message" placeholder="Your message here..." rows="5"
+                                  class="shadow appearance-none border rounded-xl w-full py-3 px-4 leading-tight focus:outline-none focus:shadow-outline focus:ring-2 resize-y"></textarea>
+                    </div>
+                    <div class="flex items-center justify-center">
+                        <button type="submit"
+                                class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-8 rounded-xl shadow-md transition-colors duration-300">
+                            Send Message
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Footer Section -->
+        <footer class="text-center mt-10 p-6 bg-gray-800 rounded-3xl shadow-lg animate-on-scroll text-gray-300">
+            <p>&copy; 2025 Dr. Anjana Pavithran. All rights reserved.</p>
+            <div class="flex justify-center gap-4 mt-4">
+                <a href="https://twitter.com/yourprofile" target="_blank" class="text-purple-400 hover:text-purple-300 transition-colors duration-200">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.22 8.22 0 01-2.606.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012 10.72v.058a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.188a11.644 11.644 0 006.29 2.063z"/></svg>
+                </a>
+                <a href="https://instagram.com/yourprofile" target="_blank" class="text-purple-400 hover:text-purple-300 transition-colors duration-200">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 0C8.74 0 8.333.014 7.053.072 5.775.132 4.905.333 4.14.636c-.78.307-1.45.723-2.003 1.276-.554.553-.97 1.223-1.277 2.003-.309.765-.51 1.635-.572 2.913-.058 1.28-.072 1.676-.072 4.004s.014 2.724.072 4.004c.062 1.276.263 2.146.572 2.913.307.78.723 1.45 1.277 2.003.553.554 1.223.97 2.003 1.277.765.309 1.635.51 2.913.572 1.28.058 1.676.072 4.004.072s2.724-.014 4.004-.072c1.276-.062 2.146-.263 2.913-.572.78-.307 1.45-.723 2.003-1.277.554-.553.97-1.223 1.277-2.003.309-.765.51-1.635.572-2.913.058-1.28.072-1.676.072-4.004s-.014-2.724-.072-4.004c-.062-1.276-.263-2.146-.572-2.913-.307-.78-.723-1.45-1.277-2.003C21.36 2.56 20.69 2.146 19.91 1.838c-.765-.309-1.635-.51-2.913-.572C15.72 1.14 15.324 1.125 13 1.125h-1zm0 1.5c2.32 0 2.58.01 3.493.054.87.043 1.32.17 1.625.29.47.197.79.407 1.09.707.3.3.51.62.707 1.09.12.305.247.755.29 1.625.044.913.054 1.173.054 3.493s-.01 2.58-.054 3.493c-.043.87-.17 1.32-.29 1.625-.197.47-.407.79-.707 1.09-.3.3-.62.51-1.09.707-.305.12-.755.247-1.625.29-.913.044-1.173.054-3.493-.054Z" clip-rule="evenodd"></path></svg>
+                </a>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- Modal Structure -->
+    <div id="skillModal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close-btn">&times;</button>
+            <h3 id="modalSkillTitle" class="text-2xl font-bold mb-4 text-purple-400"></h3>
+            <p id="modalSkillDescription" class="text-gray-200 leading-relaxed"></p>
+        </div>
+    </div>
+
+    <button id="backToTopBtn" title="Go to top">
+        &#9650; <!-- Up arrow character -->
+    </button>
+
+    <script>
+        // JavaScript for smooth scrolling and active tab highlighting
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = document.querySelectorAll('.animate-on-scroll');
+            const backToTopBtn = document.getElementById('backToTopBtn');
+            const navLinks = document.querySelectorAll('.hero-nav .nav-links a');
+            const skillLinks = document.querySelectorAll('.skill-link');
+            const skillModal = document.getElementById('skillModal');
+            const modalSkillTitle = document.getElementById('modalSkillTitle');
+            const modalSkillDescription = document.getElementById('modalSkillDescription');
+            const modalCloseBtn = document.querySelector('.modal-close-btn');
+
+            // Define skill details
+            const skillDetails = {
+                "Diagnosis and treatment planning": {
+                    title: "Diagnosis and Treatment Planning",
+                    description: `
+                        <strong>What it is:</strong> The process of identifying oral health conditions and creating a comprehensive plan to address them. This involves examining teeth, gums, and oral tissues, reviewing patient history, and interpreting diagnostic tests like X-rays.
+                        <br><br>
+                        <strong>Why it's used/performed:</strong> To accurately identify the root cause of dental problems and develop a tailored, effective treatment strategy. It ensures that all aspects of a patient's oral health are considered, from immediate concerns to long-term preventive care.
+                        <br><br>
+                        <strong>Importance:</strong> It's the foundation of all successful dental care. Proper diagnosis prevents misdiagnosis, ensures appropriate interventions, and leads to predictable and lasting positive outcomes for the patient's oral health.
+                    `
+                },
+                "Digital radiography": {
+                    title: "Digital Radiography",
+                    description: `
+                        <strong>What it is:</strong> A modern imaging technique that uses digital sensors instead of traditional photographic film to capture dental X-ray images. The images are immediately available on a computer screen.
+                        <br><br>
+                        <strong>Why it's used/performed:</strong> To visualize internal tooth structures, bone levels, and hidden dental issues (like cavities between teeth, infections, or or impacted wisdom teeth) that are not visible during a clinical examination. It's faster, more efficient, and exposes patients to significantly less radiation than traditional film X-rays.
+                        <br><br>
+                        <strong>Importance:</strong> Essential for accurate diagnosis and treatment planning, especially for conditions not visible to the naked eye. It allows for early detection of problems, leading to less invasive and more successful treatments.
+                    `
+                },
+                "Direct restoration": {
+                    title: "Direct Restoration",
+                    description: `
+                        <strong>What it is:</strong> Dental fillings placed directly into a prepared tooth cavity during a single office visit. Common materials include composite resin (tooth-colored) and amalgam (silver).
+                        <br><br>
+                        <strong>Why it's used/performed:</strong> To repair teeth damaged by decay, minor fractures, or wear. The material is applied directly to the tooth and hardened, restoring its form and function.
+                        <br><br>
+                        <strong>Importance:</strong> Prevents further decay, restores chewing function, and maintains the integrity of the tooth structure, avoiding more extensive and costly procedures in the future.
+                    `
+                },
+                "Indirect restoration": {
+                    title: "Indirect Restoration",
+                    description: `
+                        <strong>What it is:</strong> Dental restorations (like crowns, inlays, onlays, and veneers) that are fabricated outside the mouth, typically in a dental lab, and then bonded or cemented to the tooth in a subsequent appointment.
+                        <br><br>
+                        <strong>Why it's used/performed:</strong> For more extensive tooth damage, large cavities, or to improve the aesthetics and strength of a tooth when a direct filling is insufficient. They offer superior durability, strength, and precise fit.
+                        <br><br>
+                        <strong>Importance:</strong> Provides long-lasting solutions for significant tooth damage, enhances tooth strength and appearance, and helps preserve the remaining natural tooth structure.
+                    `
+                },
+                "Complete and partial denture": {
+                    title: "Complete and Partial Denture",
+                    description: `
+                        <strong>What it is:</strong> Removable appliances used to replace missing teeth and surrounding tissues. Complete dentures replace all teeth in an arch, while partial dentures replace some missing teeth when natural teeth remain.
+                        <br><br>
+                        <strong>Why it's used/performed:</strong> To restore chewing ability, improve speech, and enhance facial aesthetics for patients who have lost multiple or all of their natural teeth.
+                        <br><br>
+                        <strong>Importance:</strong> Significantly improves a patient's quality of life by restoring oral function and confidence, preventing facial sagging, and maintaining the proper alignment of remaining natural teeth (for partial dentures).
+                    `
+                },
+                "Oral prophylaxis": {
+                    title: "Oral Prophylaxis",
+                    description: `
+                        <strong>What it is:</strong> A professional dental cleaning that involves scaling (removing plaque and tartar from tooth surfaces, both above and below the gum line) and polishing (smoothing tooth surfaces to prevent plaque re-accumulation).
+                        <br><br>
+                        <strong>Why it's used/performed:</strong> To remove hardened plaque (calculus/tartar) and soft plaque that cannot be removed by regular brushing and flossing. This prevents gum disease (gingivitis and periodontitis) and tooth decay.
+                        <br><br>
+                        <strong>Importance:</strong> Crucial for maintaining optimal oral hygiene, preventing gum disease, fresh breath, and preserving overall dental health. Regular prophylaxis is a cornerstone of preventive dentistry.
+                    `
+                },
+                "Tooth extraction": {
+                    title: "Tooth Extraction",
+                    description: `
+                        <strong>What it is:</strong> The removal of a tooth from its socket in the bone. This can be a simple extraction (for visible teeth) or a surgical extraction (for impacted or broken teeth).
+                        <br><br>
+                        <strong>Why it's used/performed:</strong> Necessary for severely decayed or damaged teeth beyond repair, advanced gum disease, impacted wisdom teeth, orthodontic treatment (to create space), or infection.
+                        <br><br>
+                        <strong>Importance:</strong> Alleviates pain, resolves infection, prevents damage to adjacent teeth, and prepares the mouth for restorative options like implants or dentures.
+                    `
+                },
+                "Root canal procedures": {
+                    title: "Root Canal Procedures",
+                    description: `
+                        <strong>What it is:</strong> A dental procedure to remove infected or damaged pulp (the soft tissue inside the tooth containing nerves and blood vessels) from the tooth's root canal system, clean and disinfect the space, and then fill and seal it.
+                        <br><br>
+                        <strong>Why it's used/performed:</strong> To save a tooth that is severely decayed, fractured, or infected, preventing the need for extraction. It eliminates pain and stops the spread of infection.
+                        <br><br>
+                        <strong>Importance:</strong> Preserves the natural tooth, maintains chewing function, and prevents the need for more costly and complex tooth replacement options. It's a highly effective way to alleviate severe toothache.
+                    `
+                },
+                "Crown and bridge preparation": {
+                    title: "Crown and Bridge Preparation",
+                    description: `
+                        <strong>What it is:</strong> The process of preparing teeth to receive dental crowns (caps that cover an entire tooth) or bridges (appliances that replace one or more missing teeth by being anchored to adjacent natural teeth). This involves reshaping the tooth and taking impressions.
+                        <br><br>
+                        <strong>Why it's used/performed:</strong> Crowns are used to restore severely damaged or weakened teeth, protect a tooth after a root canal, or improve aesthetics. Bridges are used to replace missing teeth, restoring function and preventing shifting of remaining teeth.
+                        <br><br>
+                        <strong>Importance:</strong> Restores the strength, function, and appearance of damaged or missing teeth, improving chewing ability, speech, and overall oral health.
+                    `
+                },
+                "Periodontal surgeries": {
+                    title: "Periodontal Surgeries",
+                    description: `
+                        <strong>What it is:</strong> Surgical procedures performed to treat advanced gum disease (periodontitis) or to correct related issues. Examples include flap surgery (to clean deep pockets), bone grafting, and gum grafting.
+                        <br><br>
+                        <strong>Why it's used/performed:</strong> To eliminate deep pockets of infection, regenerate lost bone and gum tissue, or cover exposed root surfaces. These procedures aim to halt the progression of gum disease and restore the health and integrity of the supporting structures of the teeth.
+                        <br><br>
+                        <strong>Importance:</strong> Essential for managing severe gum disease, preventing tooth loss, reducing inflammation, and improving overall oral and systemic health.
+                    `
+                },
+                "Dental implant assistance": {
+                    title: "Dental Implant Assistance",
+                    description: `
+                        <strong>What it is:</strong> Assisting in the surgical placement of dental implants, which are artificial tooth roots (usually made of titanium) surgically anchored into the jawbone to support a crown, bridge, or denture.
+                        <br><br>
+                        <strong>Why it's used/performed:</strong> Implants provide a stable and long-lasting foundation for tooth replacement, mimicking natural teeth. Assistance ensures a smooth and sterile surgical procedure.
+                        <br><br>
+                        <strong>Importance:</strong> Implants are considered the gold standard for tooth replacement, offering superior stability, preserving bone structure, and providing a highly aesthetic and functional solution for missing teeth.
+                    `
+                },
+                "Patient education care and management": {
+                    title: "Patient Education, Care, and Management",
+                    description: `
+                        <strong>What it is:</strong> The process of informing patients about their oral health conditions, treatment options, preventive measures, and proper home care techniques. It also involves managing their overall dental experience, including comfort and anxiety.
+                        <br><br>
+                        <strong>Why it's used/performed:</strong> To empower patients to make informed decisions about their treatment, improve their understanding of oral hygiene, and encourage active participation in their own care. Effective management ensures a positive and comfortable experience.
+                        <br><br>
+                        <strong>Importance:</strong> Crucial for achieving successful treatment outcomes and fostering long-term oral health. Educated patients are more likely to comply with treatment plans and maintain good oral hygiene habits.
+                    `
+                },
+                "Fostering long-term patient relationships": {
+                    title: "Fostering Long-Term Patient Relationships",
+                    description: `
+                        <strong>What it is:</strong> Building trust, rapport, and consistent communication with patients over time to encourage regular dental visits and ensure continuity of care.
+                        <br><br>
+                        <strong>Why it's used/performed:</strong> A strong patient-dentist relationship leads to better patient compliance, increased comfort, and a deeper understanding of individual patient needs and history, which is vital for personalized care.
+                        <br><br>
+                        <strong>Importance:</strong> Enhances patient loyalty, improves treatment adherence, and allows for proactive management of oral health over a lifetime, leading to better overall outcomes.
+                    `
+                },
+                "Research and publication": {
+                    title: "Research and Publication",
+                    description: `
+                        <strong>What it is:</strong> Engaging in scientific inquiry to advance dental knowledge and sharing findings through academic papers, presentations, or journals.
+                        <br><br>
+                        <strong>Why it's used/performed:</strong> To contribute to the evolving field of dentistry, discover new techniques, improve existing treatments, and stay at the forefront of dental innovation.
+                        <br><br>
+                        <strong>Importance:</strong> Drives progress in dental science, improves patient care through evidence-based practices, and enhances the professional credibility and expertise of the practitioner.
+                    `
+                },
+                "Detail oriented and dexterity": {
+                    title: "Detail Oriented and Dexterity",
+                    description: `
+                        <strong>What it is:</strong> Being meticulous and precise in dental procedures, coupled with excellent fine motor skills and hand-eye coordination.
+                        <br><br>
+                        <strong>Why it's used/performed:</strong> Dentistry requires extreme precision due to the small working area of the mouth and the delicate nature of dental procedures. Dexterity ensures accurate and safe execution of treatments.
+                        <br><br>
+                        <strong>Importance:</strong> Essential for performing intricate procedures flawlessly, minimizing errors, achieving optimal aesthetic and functional results, and ensuring patient safety and comfort.
+                    `
+                },
+                "Strong communication skills": {
+                    title: "Strong Communication skills",
+                    description: `
+                        <strong>What it is:</strong> The ability to clearly and empathetically convey information to patients, listen actively to their concerns, and collaborate effectively with dental team members.
+                        <br><br>
+                        <strong>Why it's used/performed:</strong> To build trust with patients, explain complex procedures in an understandable way, address patient anxieties, and ensure seamless coordination within the dental practice.
+                        <br><br>
+                        <strong>Importance:</strong> Facilitates effective patient education, improves patient comfort and cooperation, prevents misunderstandings, and contributes to a positive and efficient dental practice environment.
+                    `
+                },
+                "Multi-lingual": {
+                    title: "Multi-lingual",
+                    description: `
+                        <strong>What it is:</strong> Proficiency in speaking and understanding multiple languages.
+                        <br><br>
+                        <strong>Why it's used/performed:</strong> To effectively communicate with a diverse patient population, overcome language barriers, and provide culturally sensitive care.
+                        <br><br>
+                        <strong>Importance:</strong> Enhances patient comfort and trust, ensures clear understanding of diagnoses and treatment plans for non-English speaking patients, and expands the reach of the dental practice to a broader community.
+                    `
+                }
+            };
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        navLinks.forEach(link => {
+                            link.classList.remove('active');
+                            // Determine which section is currently in view and activate its corresponding nav link
+                            const targetId = link.getAttribute('href').substring(1);
+                            if (targetId && entry.target.id === targetId) {
+                                link.classList.add('active');
+                            }
+                        });
+                    } else {
+                        // Optional: remove 'is-visible' if you want elements to disappear on scroll out
+                        // entry.target.classList.remove('is-visible');
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+
+            // Smooth scroll for navigation links
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 20, // Adjust offset as needed for fixed header/nav
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            // Back to Top Button functionality
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                    backToTopBtn.style.display = 'flex';
+                } else {
+                    backToTopBtn.style.display = 'none';
+                }
+            });
+
+            backToTopBtn.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+
+            // Skill link click handler for modal
+            skillLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault(); // Prevent default link behavior
+                    const skillName = e.target.dataset.skill || e.target.closest('.skill-link').dataset.skill; // Handle click on child div
+                    const details = skillDetails[skillName];
+
+                    if (details) {
+                        modalSkillTitle.textContent = details.title;
+                        modalSkillDescription.innerHTML = details.description; // Use innerHTML for rich text
+                        skillModal.classList.add('show');
+                    } else {
+                        console.error(`Details for skill "${skillName}" not found.`);
+                    }
+                });
+            });
+
+            // Close modal functionality
+            modalCloseBtn.addEventListener('click', () => {
+                skillModal.classList.remove('show');
+            });
+
+            // Close modal if clicking outside content
+            skillModal.addEventListener('click', (e) => {
+                if (e.target === skillModal) {
+                    skillModal.classList.remove('show');
+                }
+            });
+
+            // Trigger initial animations for elements already in view on load
+            sections.forEach(section => {
+                const rect = section.getBoundingClientRect();
+                if (rect.top < window.innerHeight && rect.bottom >= 0) {
+                    section.classList.add('is-visible');
+                }
+            });
+
+            // AI Assistant functionality (placeholder)
+            const chatInput = document.getElementById('chat-input');
+            const sendButton = document.getElementById('send-button');
+            const chatMessages = document.getElementById('chat-messages');
+
+            sendButton.addEventListener('click', () => {
+                const message = chatInput.value.trim();
+                if (message) {
+                    // Add user message
+                    const userMessageDiv = document.createElement('div');
+                    userMessageDiv.className = 'bg-blue-100 p-3 rounded-lg max-w-[80%] self-end mb-2 ml-auto';
+                    userMessageDiv.textContent = message;
+                    chatMessages.appendChild(userMessageDiv);
+                    chatInput.value = ''; // Clear input
+
+                    // Scroll to bottom
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+                    // Simulate AI response (replace with actual API call later)
+                    setTimeout(() => {
+                        const aiResponseDiv = document.createElement('div');
+                        aiResponseDiv.className = 'bg-gray-200 p-3 rounded-lg max-w-[80%] self-start mb-2';
+                        aiResponseDiv.textContent = "Thank you for your question! I'm still under development, but I'll be able to answer your queries about Dr. Anjana soon.";
+                        chatMessages.appendChild(aiResponseDiv);
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                    }, 1000);
+                }
+            });
+
+            chatInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    sendButton.click();
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
